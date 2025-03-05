@@ -1,4 +1,4 @@
-package utils
+package tasks_utils
 
 import (
 	"encoding/json"

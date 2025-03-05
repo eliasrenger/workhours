@@ -1,4 +1,4 @@
-package utils
+package tasks_utils
 
 import (
 	"example.com/workhours/config"
@@ -6,20 +6,6 @@ import (
 )
 
 var cfg config.Config = config.LoadConfig()
-
-func GetOngoingWorkDay() (models.WorkDay, error) {
-	var failedReturn models.WorkDay
-	workDayData, err := ReadWorkDays(cfg.WorkDaysFilePath)
-	if err != nil {
-		return failedReturn, err
-	}
-	for _, workDay := range workDayData {
-		if workDay.FinnishedAt.Year() == 1 {
-			return workDay, nil
-		}
-	}
-	return failedReturn, nil
-}
 
 func GetOngoingTask() (models.Task, error) {
 	var failedReturn models.Task
@@ -34,3 +20,22 @@ func GetOngoingTask() (models.Task, error) {
 	}
 	return failedReturn, nil
 }
+
+func IsTaskActive(task models.Task) bool {
+	if task.FinnishedAt.Year() == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func IsLastSessionActive(task models.Task) bool {
+	lastSession := task.TimeSessions[len(task.TimeSessions)-1]
+	if lastSession.FinnishedAt.Year() == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func UpdateTask(task models.Task) {}
