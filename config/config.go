@@ -1,10 +1,9 @@
 package config
 
 import (
+	"encoding/json"
 	"log"
 	"os"
-
-	"example.com/workhours/utils"
 )
 
 type Config struct {
@@ -16,9 +15,21 @@ func LoadConfig() Config {
 	// Read as a specific struct
 	cwd, _ := os.Getwd()
 	log.Printf("Current working directory: %s", cwd)
-	config, err := utils.ReadJSON[Config]("./config/config.json")
+
+	// Read the file
+	var config Config
+	data, err := os.ReadFile("./config/config.json")
 	if err != nil {
 		log.Fatalf("Error: %v", err)
+		return config
 	}
+
+	// Unmarshal the JSON
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+		return config
+	}
+
 	return config
 }

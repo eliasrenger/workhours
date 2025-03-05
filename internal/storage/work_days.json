@@ -1,0 +1,14 @@
+[
+  {
+    "id": "fake",
+    "started_at": "2025-03-05T17:25:17.498848+01:00",
+    "finnished_at": "2025-03-05T18:49:02.965587+01:00",
+    "tasks_worked_at": null,
+    "time_sessions": null,
+    "paused_at": "0001-01-01T00:00:00Z",
+    "ongoing": false,
+    "pause_duration": 0,
+    "work_duration": 0,
+    "total_duration": 0
+  }
+]
