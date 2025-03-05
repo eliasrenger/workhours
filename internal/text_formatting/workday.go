@@ -11,6 +11,6 @@ func EndOfWorkDayFormat(workDay models.WorkDay) string {
 	date := fmt.Sprintf("%v-%v-%v", d, m, y)
 	return fmt.Sprintf(
 		"| Date         | Work Duration | Short Breaks | Tasks \n| %v |        %v |         %v | %v ",
-		date, workDay.WorkDuration, workDay.NumberOfBreaks, workDay.TasksWorkedOn,
+		date, workDay.WorkDuration, workDay.NumberOfQuickBreaks, workDay.TasksWorkedOn,
 	)
 }

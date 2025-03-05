@@ -7,9 +7,9 @@ import (
 
 	"example.com/workhours/config"
 	"example.com/workhours/internal/models"
-	"example.com/workhours/internal/text_formatting"
+	textformatting "example.com/workhours/internal/text_formatting"
 	"example.com/workhours/utils"
-	"example.com/workhours/utils/work_day"
+	work_day_utils "example.com/workhours/utils/work_day"
 )
 
 var cfg config.Config = config.LoadConfig()
@@ -83,12 +83,20 @@ func CmdResumeWorkDay() {
 }
 
 func CmdQuickieWorkDay() {
+	currentTime := time.Now()
 	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
 	}
 
-	foundWorkDay.NumberOfBreaks ++
+	if foundWorkDay.LastQuickBreak.Year() == 1 {
+		fmt.Println("first quickie of the day. good job!")
+	} else { // TODO round output
+		fmt.Printf("last quickie was %v min ago\n", currentTime.Sub(foundWorkDay.LastQuickBreak).Minutes())
+	}
+
+	foundWorkDay.NumberOfQuickBreaks++
+	foundWorkDay.LastQuickBreak = currentTime
 	editErr := work_day_utils.EditWorkDay(cfg.WorkDaysFilePath, foundWorkDay)
 	if editErr != nil {
 		log.Fatalln("failed to edit ongoing workday:", err)
