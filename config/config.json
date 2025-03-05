@@ -1,0 +1,4 @@
+{
+    "tasks_file_path": "./internal/storage/tasks.json",
+    "work_days_file_path": "./internal/storage/work_days.json"
+}
