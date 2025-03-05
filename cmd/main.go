@@ -24,6 +24,8 @@ func main() {
 		commands.CmdBreakWorkDay()
 	case "resume":
 		commands.CmdResumeWorkDay()
+	case "quickie":
+		commands.CmdQuickieWorkDay()
 	case "end":
 		commands.CmdEndWorkDay()
 
