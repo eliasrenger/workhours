@@ -12,10 +12,6 @@ type Config struct {
 }
 
 func LoadConfig() Config {
-	// Read as a specific struct
-	cwd, _ := os.Getwd()
-	log.Printf("Current working directory: %s", cwd)
-
 	// Read the file
 	var config Config
 	data, err := os.ReadFile("./config/config.json")

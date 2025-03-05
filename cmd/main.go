@@ -22,6 +22,8 @@ func main() {
 		commands.CmdBeginWorkDay()
 	case "break":
 		commands.CmdBreakWorkDay()
+	case "resume":
+		commands.CmdResumeWorkDay()
 	case "end":
 		commands.CmdEndWorkDay()
 

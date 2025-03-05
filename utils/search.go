@@ -28,7 +28,7 @@ func GetOngoingTask() (models.Task, error) {
 		return failedReturn, err
 	}
 	for _, task := range tasks {
-		if task.Ongoing {
+		if task.FinnishedAt.Year() != 1 {
 			return task, nil
 		}
 	}

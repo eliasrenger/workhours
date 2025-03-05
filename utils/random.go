@@ -1,5 +1,9 @@
 package utils
 
-func GetFakeUUID() string {
-	return "fake"
+import (
+	"math/rand"
+)
+
+func GetFakeUUID() uint64 {
+	return rand.Uint64()
 }

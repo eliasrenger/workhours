@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"slices"
 
@@ -53,10 +52,8 @@ func EditWorkDay(filePath string, newWorkDay models.WorkDay) error {
 	var cleanedWorkDays []models.WorkDay
 	var foundTargetTask bool
 	for idx, workDay := range workDays {
-		fmt.Println(idx, workDay, newWorkDay)
 		if workDay.Id == newWorkDay.Id {
 			cleanedWorkDays = slices.Delete(workDays, idx, idx+1)
-			fmt.Println("found workDay", cleanedWorkDays)
 			foundTargetTask = true
 			break
 		}
