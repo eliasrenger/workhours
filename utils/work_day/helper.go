@@ -9,18 +9,18 @@ import (
 
 var cfg config.Config = config.LoadConfig()
 
-func GetOngoingWorkDay() (models.WorkDay, error) {
+func GetActiveWorkDay() (models.WorkDay, bool, error) {
 	var failedReturn models.WorkDay
 	workDayData, err := ReadWorkDays(cfg.WorkDaysFilePath)
 	if err != nil {
-		return failedReturn, err
+		return failedReturn, false, err
 	}
 	for _, workDay := range workDayData {
-		if workDay.FinnishedAt.Year() == 1 {
-			return workDay, nil
+		if workDay.FinnishedAt.Year() == 1 && workDay.StartedAt.Year() != 1 {
+			return workDay, true, nil
 		}
 	}
-	return failedReturn, nil
+	return failedReturn, false, nil
 }
 
 func IsWorkDayActive(workDay models.WorkDay) bool {

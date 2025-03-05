@@ -16,13 +16,13 @@ var cfg config.Config = config.LoadConfig()
 
 func CmdBeginWorkDay() {
 	startedAt := time.Now()
-	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
+	foundWorkDay, ok, err := work_day_utils.GetActiveWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
 	}
 
-	if !work_day_utils.IsWorkDayActive(foundWorkDay) {
-		fmt.Println("There is already a workday ongoing. Started at:", foundWorkDay.StartedAt)
+	if ok && work_day_utils.IsWorkDayActive(foundWorkDay) {
+		fmt.Println("there is already a workday ongoing started at:", foundWorkDay.StartedAt)
 		return
 	}
 
@@ -40,9 +40,12 @@ func CmdBeginWorkDay() {
 // TODO: break and resume should check length of TimeSessions
 func CmdBreakWorkDay() {
 	finnishedAt := time.Now()
-	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
+	foundWorkDay, ok, err := work_day_utils.GetActiveWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
+	}
+	if !ok {
+		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
 	}
 
 	if !work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -59,9 +62,12 @@ func CmdBreakWorkDay() {
 
 func CmdResumeWorkDay() {
 	startedAt := time.Now()
-	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
+	foundWorkDay, ok, err := work_day_utils.GetActiveWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
+	}
+	if !ok {
+		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
 	}
 
 	if work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -84,9 +90,12 @@ func CmdResumeWorkDay() {
 
 func CmdQuickieWorkDay() {
 	currentTime := time.Now()
-	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
+	foundWorkDay, ok, err := work_day_utils.GetActiveWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
+	}
+	if !ok {
+		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
 	}
 
 	if foundWorkDay.LastQuickBreak.Year() == 1 {
@@ -108,9 +117,12 @@ func CmdQuickieWorkDay() {
 // Handle case when day ends on a different date then it begun?
 func CmdEndWorkDay() {
 	finnishedAt := time.Now()
-	foundWorkDay, err := work_day_utils.GetOngoingWorkDay()
+	foundWorkDay, ok, err := work_day_utils.GetActiveWorkDay()
 	if err != nil {
 		log.Fatalln("failed to get ongoing workday:", err)
+	}
+	if !ok {
+		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
 	}
 
 	if work_day_utils.IsLastSessionActive(foundWorkDay) {

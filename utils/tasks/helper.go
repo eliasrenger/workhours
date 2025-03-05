@@ -7,18 +7,18 @@ import (
 
 var cfg config.Config = config.LoadConfig()
 
-func GetOngoingTask() (models.Task, error) {
+func GetActiveTask() (models.Task, bool, error) {
 	var failedReturn models.Task
 	tasks, err := ReadTasks(cfg.TasksFilePath)
 	if err != nil {
-		return failedReturn, err
+		return failedReturn, false, err
 	}
 	for _, task := range tasks {
-		if task.FinnishedAt.Year() != 1 {
-			return task, nil
+		if task.FinnishedAt.Year() == 1 && task.StartedAt.Year() != 1 {
+			return task, true, nil
 		}
 	}
-	return failedReturn, nil
+	return failedReturn, false, nil
 }
 
 func IsTaskActive(task models.Task) bool {
