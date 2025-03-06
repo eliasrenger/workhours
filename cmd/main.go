@@ -37,5 +37,8 @@ func main() {
 		commands.CmdFinnishTask()
 	case "list":
 		commands.CmdListTasks()
+
+	default:
+		commands.CmdHelp()
 	}
 }
