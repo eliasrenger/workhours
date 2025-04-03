@@ -57,7 +57,7 @@ func EditTask(newTask models.Task) {
 		}
 	}
 	if !foundTargetTask {
-		log.Fatalln("failed to find task %v in saved tasks", newTask.Name)
+		log.Fatalf("failed to find task %v in saved tasks", newTask.Name)
 	}
 	editedTasks := append(cleanedTasks, newTask)
 	SaveTasks(editedTasks)
