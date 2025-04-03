@@ -5,15 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/eliasrenger/workhours/config"
 	"github.com/eliasrenger/workhours/internal/models"
 	textformatting "github.com/eliasrenger/workhours/internal/text_formatting"
 	"github.com/eliasrenger/workhours/utils"
 	task_utils "github.com/eliasrenger/workhours/utils/task"
 	work_day_utils "github.com/eliasrenger/workhours/utils/work_day"
 )
-
-var cfg config.Config = config.LoadConfig()
 
 func CmdStartWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
@@ -34,11 +31,10 @@ func CmdStartWorkDay(currentTime time.Time) {
 	work_day_utils.AppendWorkDay(workDay)
 }
 
-// TODO: break and resume should check length of TimeSessions
 func CmdPauseWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
+		log.Fatalln("no workday is logged - use command 'start' to log your first workday")
 	}
 
 	if !work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -58,7 +54,7 @@ func CmdPauseWorkDay(currentTime time.Time) {
 func CmdResumeWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
+		log.Fatalln("no workday is logged - use command 'start' to log your first workday")
 	}
 
 	if work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -79,7 +75,7 @@ func CmdResumeWorkDay(currentTime time.Time) {
 func CmdQuickieWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is logged - use command 'begin' to log your first workday")
+		log.Fatalln("no workday is logged - use command 'start' to log your first workday")
 	}
 
 	if foundWorkDay.LastQuickBreak.Year() == 1 {
@@ -95,11 +91,11 @@ func CmdQuickieWorkDay(currentTime time.Time) {
 	fmt.Println("quick break registered")
 }
 
-// Handle case when day ends on a different date then it begun?
-func CmdEndWorkDay(currentTime time.Time) {
+// Handle case when day finishes on a different date than it begun?
+func CmdFinishWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is active - use command 'begin' to log your first workday")
+		log.Fatalln("no workday is active - use command 'start' to log your first workday")
 	}
 
 	if work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -118,7 +114,7 @@ func CmdEndWorkDay(currentTime time.Time) {
 func CmdHoursWorkDay() {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is active - use command 'begin' to log your first workday")
+		log.Fatalln("no workday is active - use command 'start' to log your first workday")
 	}
 
 	// calculate hours

@@ -75,16 +75,16 @@ func main() {
 			commands.CmdHelp()
 		}
 
-	// end tracking
-	case "end":
+	// finish tracking
+	case "finish":
 		switch subCommand {
 		case "work":
-			commands.CmdEndWorkDay(currentTime)
+			commands.CmdFinishWorkDay(currentTime)
 		case "task":
 			if len(args) < 1 {
 				log.Fatalln("provide task name")
 			}
-			commands.CmdEndTask(currentTime, args)
+			commands.CmdFinishTask(currentTime, args)
 		default:
 			commands.CmdHelp()
 		}

@@ -107,16 +107,16 @@ func CmdResumeTask(currentTime time.Time, args []string) {
 		log.Fatalln("there is no task with the name:", targetTask.Name)
 	}
 	if task_utils.IsTaskFinished(targetTask) {
-		log.Fatalf("the task %v is finished, can't continue task\n", targetTask.Name)
+		log.Fatalf("the task %v is finished, can't resume task\n", targetTask.Name)
 	}
 
 	// start new timesession
 	current_time_session := models.TimeSession{StartedAt: currentTime}
 	targetTask.TimeSessions = append(targetTask.TimeSessions, current_time_session)
 	task_utils.EditTask(targetTask)
-	fmt.Printf("clock for task %v was continued at %v", activeTask.Name, currentTime)
+	fmt.Printf("clock for task %v was resumed at %v", activeTask.Name, currentTime)
 
-	// begin or resume workday
+	// start or resume workday
 	activeWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if ok {
 		CmdResumeWorkDay(currentTime)
@@ -137,7 +137,7 @@ func CmdResumeTask(currentTime time.Time, args []string) {
 	}
 }
 
-func CmdEndTask(currentTime time.Time, args []string) {
+func CmdFinishTask(currentTime time.Time, args []string) {
 	// find target task
 	targetTask, ok := task_utils.GetTaskByName(args[0])
 	if !ok {
