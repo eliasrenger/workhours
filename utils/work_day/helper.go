@@ -37,6 +37,17 @@ func IsLastSessionActive(workDay models.WorkDay) bool {
 	}
 }
 
+func ResumeWorkDay(workDay models.WorkDay, currentTime time.Time) {
+	workDay.TimeSessions = append(
+		workDay.TimeSessions,
+		models.TimeSession{
+			StartedAt: currentTime,
+		},
+	)
+
+	EditWorkDay(workDay)
+}
+
 func UpdateWorkDay(workDay models.WorkDay) models.WorkDay {
 	currentTime := time.Now()
 	// Duration

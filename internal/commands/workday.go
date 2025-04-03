@@ -54,7 +54,7 @@ func CmdPauseWorkDay(currentTime time.Time) {
 func CmdResumeWorkDay(currentTime time.Time) {
 	foundWorkDay, ok := work_day_utils.GetActiveWorkDay()
 	if !ok {
-		log.Fatalln("no workday is logged - use command 'start' to log your first workday")
+		log.Fatalln("no active workday - use command 'start' to start your workday")
 	}
 
 	if work_day_utils.IsLastSessionActive(foundWorkDay) {
@@ -62,14 +62,7 @@ func CmdResumeWorkDay(currentTime time.Time) {
 		return
 	}
 
-	foundWorkDay.TimeSessions = append(
-		foundWorkDay.TimeSessions,
-		models.TimeSession{
-			StartedAt: currentTime,
-		},
-	)
-
-	work_day_utils.EditWorkDay(foundWorkDay)
+	work_day_utils.ResumeWorkDay(foundWorkDay, currentTime)
 }
 
 func CmdQuickieWorkDay(currentTime time.Time) {

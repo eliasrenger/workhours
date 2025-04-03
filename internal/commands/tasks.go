@@ -47,8 +47,8 @@ func CmdStartTask(currentTime time.Time, args []string) {
 
 	// begin or resume workday
 	activeWorkDay, ok := work_day_utils.GetActiveWorkDay()
-	if ok {
-		CmdResumeWorkDay(currentTime)
+	if !ok {
+		work_day_utils.ResumeWorkDay(activeWorkDay, currentTime)
 	} else {
 		CmdStartWorkDay(currentTime)
 		activeWorkDay, _ = work_day_utils.GetActiveWorkDay() // line above creates it
