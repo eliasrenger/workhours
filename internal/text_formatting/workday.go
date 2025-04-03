@@ -3,7 +3,7 @@ package textformatting
 import (
 	"fmt"
 
-	"example.com/workhours/internal/models"
+	"github.com/eliasrenger/workhours/internal/models"
 )
 
 func EndOfWorkDayFormat(workDay models.WorkDay) string {

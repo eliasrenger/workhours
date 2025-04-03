@@ -2,66 +2,63 @@ package work_day_utils
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"slices"
 
-	"example.com/workhours/internal/models"
+	"github.com/eliasrenger/workhours/internal/models"
 )
 
-func ReadWorkDays(filePath string) ([]models.WorkDay, error) {
+func ReadWorkDays() []models.WorkDay {
 	var result []models.WorkDay
 
 	// Read the file
-	data, err := os.ReadFile(filePath)
+	data, err := os.ReadFile(cfg.WorkDaysFilePath)
 	if err != nil {
-		return result, err
+		log.Fatalln("failed to read file", cfg.WorkDaysFilePath)
 	}
 
 	// Unmarshal the JSON
 	err = json.Unmarshal(data, &result)
 	if err != nil {
-		return result, err
+		log.Fatalln("failed to unmarshal json data")
 	}
 
-	return result, nil
+	return result
 }
 
-func AppendWorkDays(filePath string, newWorkDay models.WorkDay) error {
-	oldData, err := ReadWorkDays(filePath)
-	if err != nil {
-		return err
-	}
+func AppendWorkDay(newWorkDay models.WorkDay) {
+	oldData := ReadWorkDays()
 	rawData := append(oldData, newWorkDay)
-	return SaveWorkDays(filePath, rawData)
+	SaveWorkDays(rawData)
 }
 
-func SaveWorkDays(filePath string, rawWorkDays []models.WorkDay) error {
+func SaveWorkDays(rawWorkDays []models.WorkDay) {
 	data, err := json.MarshalIndent(rawWorkDays, "", "  ")
 	if err != nil {
-		return err
+		log.Fatalln("failed to marshal json data")
 	}
-	return os.WriteFile(filePath, data, 0644)
+	err = os.WriteFile(cfg.WorkDaysFilePath, data, 0644)
+	if err != nil {
+		log.Fatalln("failed to write data to path", cfg.WorkDaysFilePath)
+	}
 }
 
-func EditWorkDay(filePath string, newWorkDay models.WorkDay) error {
-	workDays, err := ReadWorkDays(filePath)
-	if err != nil {
-		return err
-	}
+func EditWorkDay(newWorkDay models.WorkDay) {
+	workDays := ReadWorkDays()
 
 	var cleanedWorkDays []models.WorkDay
-	var foundTargetTask bool
+	var foundTargetWorkDay bool
 	for idx, workDay := range workDays {
 		if workDay.Id == newWorkDay.Id {
 			cleanedWorkDays = slices.Delete(workDays, idx, idx+1)
-			foundTargetTask = true
+			foundTargetWorkDay = true
 			break
 		}
 	}
-	if !foundTargetTask {
-		var Error error
-		return Error
+	if !foundTargetWorkDay {
+		log.Fatalln("workday to edit wasn't found in saved data")
 	}
 	editedWorkDays := append(cleanedWorkDays, newWorkDay)
-	return SaveWorkDays(filePath, editedWorkDays)
+	SaveWorkDays(editedWorkDays)
 }

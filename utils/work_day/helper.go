@@ -3,28 +3,25 @@ package work_day_utils
 import (
 	"time"
 
-	"example.com/workhours/config"
-	"example.com/workhours/internal/models"
+	"github.com/eliasrenger/workhours/config"
+	"github.com/eliasrenger/workhours/internal/models"
 )
 
 var cfg config.Config = config.LoadConfig()
 
-func GetActiveWorkDay() (models.WorkDay, bool, error) {
+func GetActiveWorkDay() (models.WorkDay, bool) {
 	var failedReturn models.WorkDay
-	workDayData, err := ReadWorkDays(cfg.WorkDaysFilePath)
-	if err != nil {
-		return failedReturn, false, err
-	}
+	workDayData := ReadWorkDays()
 	for _, workDay := range workDayData {
-		if workDay.FinnishedAt.Year() == 1 && workDay.StartedAt.Year() != 1 {
-			return workDay, true, nil
+		if workDay.FinishedAt.Year() == 1 && workDay.StartedAt.Year() != 1 {
+			return workDay, true
 		}
 	}
-	return failedReturn, false, nil
+	return failedReturn, false
 }
 
 func IsWorkDayActive(workDay models.WorkDay) bool {
-	if workDay.FinnishedAt.Year() == 1 {
+	if workDay.FinishedAt.Year() == 1 {
 		return true
 	} else {
 		return false
@@ -33,19 +30,19 @@ func IsWorkDayActive(workDay models.WorkDay) bool {
 
 func IsLastSessionActive(workDay models.WorkDay) bool {
 	lastSession := workDay.TimeSessions[len(workDay.TimeSessions)-1]
-	if lastSession.FinnishedAt.Year() == 1 {
+	if lastSession.FinishedAt.Year() == 1 {
 		return true
 	} else {
 		return false
 	}
 }
 
-func UpdateTask(workDay models.WorkDay) {
+func UpdateWorkDay(workDay models.WorkDay) models.WorkDay {
 	currentTime := time.Now()
 	// Duration
 	var duration time.Duration
 	if !IsWorkDayActive(workDay) {
-		duration = workDay.FinnishedAt.Sub(workDay.StartedAt)
+		duration = workDay.FinishedAt.Sub(workDay.StartedAt)
 	} else {
 		duration = currentTime.Sub(workDay.StartedAt)
 	}
@@ -62,13 +59,13 @@ func UpdateTask(workDay models.WorkDay) {
 	if IsLastSessionActive(workDay) {
 		lastDuration = currentTime.Sub(lastSession.StartedAt)
 	} else {
-		lastDuration = lastSession.FinnishedAt.Sub(lastSession.StartedAt)
+		lastDuration = lastSession.FinishedAt.Sub(lastSession.StartedAt)
 	}
 	for idx, timeSession := range timeSessions {
 		if idx == lastSessionIdx {
 			break
 		}
-		duration := timeSession.FinnishedAt.Sub(timeSession.StartedAt)
+		duration := timeSession.FinishedAt.Sub(timeSession.StartedAt)
 		workDuration += duration
 	}
 	workDuration += lastDuration
@@ -77,4 +74,6 @@ func UpdateTask(workDay models.WorkDay) {
 	// Break duration
 	breakDuration := duration - workDuration
 	workDay.BreakDuration = breakDuration
+
+	return workDay
 }
