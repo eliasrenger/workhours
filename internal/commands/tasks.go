@@ -11,7 +11,7 @@ import (
 	work_day_utils "github.com/eliasrenger/workhours/utils/work_day"
 )
 
-func CmdStartTask(currentTime time.Time, args []string) { // TODO: adds a second task even though the task name already exists
+func CmdStartTask(currentTime time.Time, args []string) {
 	// find target task
 	targetTask, ok := task_utils.GetTaskByName(args[0])
 	targetTaskStatus := "finished"
@@ -51,7 +51,7 @@ func CmdStartTask(currentTime time.Time, args []string) { // TODO: adds a second
 		CmdResumeWorkDay(currentTime)
 	} else {
 		CmdStartWorkDay(currentTime)
-		activeWorkDay, ok = work_day_utils.GetActiveWorkDay()
+		activeWorkDay, _ = work_day_utils.GetActiveWorkDay() // line above creates it
 	}
 
 	// save task to work day
