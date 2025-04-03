@@ -167,6 +167,10 @@ func CmdListTasks() {
 		updatedTask := task_utils.UpdateTask(task)
 		ongoingTasks = append(ongoingTasks, updatedTask)
 	}
+	if len(ongoingTasks) == 0 {
+		fmt.Println("No ongoing tasks")
+		return
+	}
 
 	fmt.Println("Currently ongoing tasks")
 	fmt.Printf("| id | task name | task duration [h] |\n")
