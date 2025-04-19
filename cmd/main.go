@@ -28,6 +28,9 @@ func main() {
 	case "help":
 		commands.CmdHelp()
 
+	case "setup":
+		commands.CmdDBSetup()
+
 	// type specific commands
 	case "quickie":
 		commands.CmdQuickieWorkDay(currentTime)
