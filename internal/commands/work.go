@@ -43,7 +43,7 @@ func CmdQuickieWork(currentTime time.Time) {
 	}
 }
 
-func CmdHoursWork(currentTime time.Time) {
+func CmdHoursWork() {
 	secondsWorked, err := services.GetSecondsWorkedToday()
 	if err != nil {
 		log.Fatalf("Error getting time worked today: %v", err)
