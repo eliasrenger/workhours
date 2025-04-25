@@ -57,6 +57,26 @@ func SetupDB() error {
 	    FOREIGN KEY(work_session_id) REFERENCES work_session(id) ON DELETE CASCADE,
 	    FOREIGN KEY(task_session_id) REFERENCES task_session(id) ON DELETE CASCADE
 	);
+	CREATE TRIGGER prevent_multiple_active_work_sessions
+	BEFORE INSERT ON work_session
+	WHEN NEW.ended_at IS NULL
+	BEGIN
+	    SELECT
+	        RAISE(ABORT, 'Only one active work_session is allowed')
+	    WHERE EXISTS (
+	        SELECT 1 FROM work_session WHERE ended_at IS NULL
+	    );
+	END;
+	CREATE TRIGGER prevent_update_to_multiple_active_work_sessions
+	BEFORE UPDATE ON work_session
+	WHEN NEW.ended_at IS NULL
+	BEGIN
+	    SELECT
+	        RAISE(ABORT, 'Only one active work_session is allowed')
+	    WHERE EXISTS (
+	        SELECT 1 FROM work_session WHERE ended_at IS NULL AND id != NEW.id
+	    );
+	END;
 	`
 
 	if _, err = db.Exec(createTableSQL); err != nil {
