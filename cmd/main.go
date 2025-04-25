@@ -33,17 +33,17 @@ func main() {
 
 	// type specific commands
 	case "quickie":
-		commands.CmdQuickieWorkDay(currentTime)
+		commands.CmdQuickieWork(currentTime)
 	case "list":
 		commands.CmdListTasks()
 	case "hours":
-		commands.CmdHoursWorkDay()
+		commands.CmdHoursWork()
 
 	// start tracking
 	case "start":
 		switch subCommand {
 		case "work":
-			commands.CmdStartWorkDay(currentTime)
+			commands.CmdStartWork(currentTime)
 		case "task":
 			commands.CmdStartTask(currentTime, args)
 		default:
@@ -51,29 +51,15 @@ func main() {
 		}
 
 	// pause tracking
-	case "pause":
+	case "stop":
 		switch subCommand {
 		case "work":
-			commands.CmdPauseWorkDay(currentTime)
+			commands.CmdStopWork(currentTime)
 		case "task":
 			if len(args) < 1 {
 				log.Fatalln("provide task name")
 			}
-			commands.CmdPauseTask(currentTime, args)
-		default:
-			commands.CmdHelp()
-		}
-
-	// resume tracking
-	case "resume":
-		switch subCommand {
-		case "work":
-			commands.CmdResumeWorkDay(currentTime)
-		case "task":
-			if len(args) < 1 {
-				log.Fatalln("provide task name")
-			}
-			commands.CmdResumeTask(currentTime, args)
+			commands.CmdStopTask(currentTime, args)
 		default:
 			commands.CmdHelp()
 		}
@@ -81,8 +67,6 @@ func main() {
 	// finish tracking
 	case "finish":
 		switch subCommand {
-		case "work":
-			commands.CmdFinishWorkDay(currentTime)
 		case "task":
 			if len(args) < 1 {
 				log.Fatalln("provide task name")
