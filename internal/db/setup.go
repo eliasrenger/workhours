@@ -21,22 +21,14 @@ func SetupDB() error {
 
 	// Create tables if they do not exist
 	createTableSQL := `
-	CREATE TABLE IF NOT EXISTS workday_session (
-		id TEXT PRIMARY KEY,
-		workday_id TEXT,
-		started_at INTEGER,
-		ended_at INTEGER,
-		notes TEXT,
-		FOREIGN KEY(workday_id) REFERENCES workday(id)
-		ON DELETE CASCADE
-	);
-	CREATE TABLE IF NOT EXISTS workday (
+	CREATE TABLE IF NOT EXISTS work_session (
 		id TEXT PRIMARY KEY,
 		date TEXT NOT NULL,
-		is_active INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
+		started_at INTEGER,
+		ended_at INTEGER,
 		number_of_quick_breaks INTEGER,
 		last_quick_break INTEGER,
-		notes TEXT
+		notes TEXT,
 	);
 	CREATE TABLE IF NOT EXISTS task_session (
 		id TEXT PRIMARY KEY,
@@ -52,18 +44,18 @@ func SetupDB() error {
 		description TEXT,
 		priority INTEGER,
 		category TEXT,
-		created_at INTEGER NOT NULL ,
+		created_at INTEGER NOT NULL,
 		completed_at INTEGER,
 		status TEXT DEFAULT 'paused' CHECK (status IN ('active', 'paused', 'completed', 'cancelled')),
 		estimated_duration INTEGER,
 		notes TEXT
 	);
-	CREATE TABLE workday_task_session (
-	    workday_id TEXT NOT NULL,
+	CREATE TABLE IF NOT EXISTS work_task_session (
+	    work_session_id TEXT NOT NULL,
 	    task_session_id TEXT NOT NULL,
-	    PRIMARY KEY (workday_id, task_session_id),
-	    FOREIGN KEY(workday_id) REFERENCES workdays(id) ON DELETE CASCADE,
-	    FOREIGN KEY(task_session_id) REFERENCES task_sessions(id) ON DELETE CASCADE
+	    PRIMARY KEY (work_session_id, task_session_id),
+	    FOREIGN KEY(work_session_id) REFERENCES work_session(id) ON DELETE CASCADE,
+	    FOREIGN KEY(task_session_id) REFERENCES task_session(id) ON DELETE CASCADE
 	);
 	`
 
