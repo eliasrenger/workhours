@@ -21,9 +21,9 @@ func InsertWorkSession(w models.WorkSession) error {
 		w.Id,
 		w.Date,
 		w.StartedAt,
-		*w.EndedAt,
+		w.EndedAt,
 		w.NumberOfQuickBreaks,
-		*w.LastQuickBreak,
+		w.LastQuickBreak,
 		w.Notes,
 	)
 
@@ -51,7 +51,7 @@ func GetWorkSessionByID(id string) (models.WorkSession, error) {
 
 func GetActiveWorkSession() (models.WorkSession, error) {
 	var w models.WorkSession
-	row := DB.QueryRow(`SELECT * FROM workday_session WHERE ended_at IS NULL`)
+	row := DB.QueryRow(`SELECT * FROM workday_session WHERE ended_at = 0`)
 	err := row.Scan(
 		&w.Id,
 		&w.Date,
@@ -69,7 +69,7 @@ func GetActiveWorkSession() (models.WorkSession, error) {
 
 func HasActiveWorkSession() (bool, error) {
 	var count int
-	row := DB.QueryRow(`SELECT COUNT(*) FROM work_session WHERE ended_at IS NULL`)
+	row := DB.QueryRow(`SELECT COUNT(*) FROM work_session WHERE ended_at = 0`)
 	err := row.Scan(&count)
 	if err != nil {
 		return false, err
@@ -87,9 +87,9 @@ func UpdateWorkSessionById(w models.WorkSession) error {
 		    notes = ?
 		WHERE id = ?`,
 		w.StartedAt,
-		*w.EndedAt,
+		w.EndedAt,
 		w.NumberOfQuickBreaks,
-		*w.LastQuickBreak,
+		w.LastQuickBreak,
 		w.Notes,
 		w.Id,
 	)
@@ -125,11 +125,10 @@ func GetWorktimeByDate(date string) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
-		if w.EndedAt != nil {
-			currentTime := time.Now().Unix()
-			w.EndedAt = &currentTime
+		if w.EndedAt == 0 {
+			w.EndedAt = time.Now().Unix()
 		}
-		secondsWorked += *w.EndedAt - w.StartedAt
+		secondsWorked += w.EndedAt - w.StartedAt
 	}
 
 	return secondsWorked, nil

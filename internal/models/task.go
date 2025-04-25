@@ -9,7 +9,7 @@ type Task struct {
 	Priority          int // 1-5
 	Category          string
 	CreatedAt         int64
-	CompletedAt       *int64 // INTEGER (Unix timestamp)
+	CompletedAt       int64 // INTEGER (Unix timestamp)
 	Status            string
 	EstimatedDuration int
 	Notes             string

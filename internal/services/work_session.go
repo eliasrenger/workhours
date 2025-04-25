@@ -28,9 +28,9 @@ func StartWork(currentTime time.Time) error {
 		Id:                  uuid.New(),
 		Date:                currentTime.Format("2006-01-02"),
 		StartedAt:           currentTime.Unix(),
-		EndedAt:             nil,
+		EndedAt:             0,
 		NumberOfQuickBreaks: 0,
-		LastQuickBreak:      nil,
+		LastQuickBreak:      0,
 		Notes:               "",
 	}
 
@@ -51,7 +51,7 @@ func StopWork(currentTime time.Time) error {
 		return ErrNoWorkSessionActive
 	}
 
-	*activeWorkSession.EndedAt = currentTime.Unix()
+	activeWorkSession.EndedAt = currentTime.Unix()
 	err = db.UpdateWorkSessionById(activeWorkSession)
 	if err != nil {
 		return err
@@ -69,9 +69,8 @@ func AddQuickBreak(currentTime time.Time) error {
 		return ErrNoWorkSessionActive
 	}
 
-	unixTime := currentTime.Unix()
 	activeWorkSession.NumberOfQuickBreaks++
-	activeWorkSession.LastQuickBreak = &unixTime
+	activeWorkSession.LastQuickBreak = currentTime.Unix()
 	err = db.UpdateWorkSessionById(activeWorkSession)
 
 	if err != nil {
