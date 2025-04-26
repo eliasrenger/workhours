@@ -28,7 +28,7 @@ func SetupDB() error {
 		ended_at INTEGER,
 		number_of_quick_breaks INTEGER,
 		last_quick_break INTEGER,
-		notes TEXT,
+		notes TEXT
 	);
 	CREATE TABLE IF NOT EXISTS task_session (
 		id TEXT PRIMARY KEY,
