@@ -152,6 +152,7 @@ func GetWorktimeByDate(date string) (int64, error) {
 			&w.LastQuickBreak,
 			&w.Notes,
 		)
+
 		if err != nil {
 			return 0, err
 		}
@@ -162,4 +163,35 @@ func GetWorktimeByDate(date string) (int64, error) {
 	}
 
 	return secondsWorked, nil
+}
+
+func GetNumberOfQuickBreaksByDate(date string) (int, error) {
+	isDateCorrectFormat := utils.IsDateCorrectFormat(date)
+	if !isDateCorrectFormat {
+		return 0, ErrDateFormat
+	}
+	var numberOfQuickBreaks int
+	rows, err := DB.Query(`SELECT id, date, started_at, ended_at, number_of_quick_breaks, last_quick_break, notes FROM work_session WHERE date = ?`, date)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var w models.WorkSession
+		err := rows.Scan(
+			&w.Id,
+			&w.Date,
+			&w.StartedAt,
+			&w.EndedAt,
+			&w.NumberOfQuickBreaks,
+			&w.LastQuickBreak,
+			&w.Notes,
+		)
+
+		if err != nil {
+			return 0, err
+		}
+		numberOfQuickBreaks = numberOfQuickBreaks + w.NumberOfQuickBreaks
+	}
+	return numberOfQuickBreaks, nil
 }

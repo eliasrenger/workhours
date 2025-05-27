@@ -46,14 +46,21 @@ func CmdHoursWork() {
 	secondsWorked, err := services.GetSecondsWorkedToday()
 	if err != nil {
 		fmt.Printf("Error getting time worked today: %v", err)
-	} else {
-		hours, minutes, _ := utils.FormatSeconds(secondsWorked)
-		var message string
-		if hours == 0 {
-			message = fmt.Sprintf("You've worked %dmin today", minutes)
-		} else {
-			message = fmt.Sprintf("You've worked %dh %dmin today", hours, minutes)
-		}
-		fmt.Println(message)
+		return
 	}
+
+	numberOfQuickBreaks, err := services.GetNumberOfQuickBreaksToday()
+	if err != nil {
+		fmt.Printf("Error getting number of quick breaks today: %v", err)
+		return
+	}
+
+	hours, minutes, _ := utils.FormatSeconds(secondsWorked)
+	var message string
+	if hours == 0 {
+		message = fmt.Sprintf("You've worked %dmin today and had %d quick breaks", minutes, numberOfQuickBreaks)
+	} else {
+		message = fmt.Sprintf("You've worked %dh %dmin today and had %d quick breaks", hours, minutes, numberOfQuickBreaks)
+	}
+	fmt.Println(message)
 }

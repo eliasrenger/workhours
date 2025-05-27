@@ -47,6 +47,7 @@ func StopWork(currentTime time.Time) error {
 	if err != nil {
 		return err
 	}
+
 	if activeWorkSession.Id == uuid.Nil {
 		return ErrNoWorkSessionActive
 	}
@@ -88,4 +89,14 @@ func GetSecondsWorkedToday() (int64, error) {
 	}
 
 	return secondsWorked, nil
+}
+
+func GetNumberOfQuickBreaksToday() (int, error) {
+	currentTime := time.Now()
+	numberOfQuickBreaks, err := db.GetNumberOfQuickBreaksByDate(currentTime.Format("2006-01-02"))
+	if err != nil {
+		return 0, err
+	}
+
+	return numberOfQuickBreaks, nil
 }
