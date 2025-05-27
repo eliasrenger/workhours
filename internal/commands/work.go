@@ -15,40 +15,40 @@ func CmdStartWork(currentTime time.Time) {
 		log.Fatalf("Work session already active.")
 	}
 	if err != nil {
-		log.Fatalf("Error starting work session: %v", err)
+		fmt.Printf("Error starting work session: %v", err)
 	} else {
-		log.Println("Work session started.")
+		fmt.Println("Work session started.")
 	}
 }
 
 func CmdStopWork(currentTime time.Time) {
 	err := services.StopWork(currentTime)
 	if err == services.ErrNoWorkSessionActive {
-		log.Fatalf("No active work session.")
+		fmt.Println("No active work session.")
 	}
 	if err != nil {
-		log.Fatalf("Error stopping work session: %v", err)
+		fmt.Printf("Error stopping work session: %v", err)
 	} else {
-		log.Println("Work session stopped.")
+		fmt.Println("Work session stopped.")
 	}
 }
 
 func CmdQuickieWork(currentTime time.Time) {
 	err := services.AddQuickBreak(currentTime)
 	if err == services.ErrNoWorkSessionActive {
-		log.Fatalf("No active work session.")
+		fmt.Println("No active work session.")
 	}
 	if err != nil {
-		log.Fatalf("Error saving quick break: %v", err)
+		fmt.Printf("Error saving quick break: %v", err)
 	} else {
-		log.Println("Quick break saved.")
+		fmt.Println("Quick break saved.")
 	}
 }
 
 func CmdHoursWork() {
 	secondsWorked, err := services.GetSecondsWorkedToday()
 	if err != nil {
-		log.Fatalf("Error getting time worked today: %v", err)
+		fmt.Printf("Error getting time worked today: %v", err)
 	} else {
 		hours, minutes, _ := utils.FormatSeconds(secondsWorked)
 		var message string
