@@ -57,7 +57,7 @@ func SetupDB() error {
 	    FOREIGN KEY(work_session_id) REFERENCES work_session(id) ON DELETE CASCADE,
 	    FOREIGN KEY(task_session_id) REFERENCES task_session(id) ON DELETE CASCADE
 	);
-	CREATE TRIGGER prevent_multiple_active_work_sessions
+	CREATE TRIGGER IF NOT EXISTS prevent_multiple_active_work_sessions
 	BEFORE INSERT ON work_session
 	WHEN NEW.ended_at IS NULL
 	BEGIN
@@ -67,7 +67,7 @@ func SetupDB() error {
 	        SELECT 1 FROM work_session WHERE ended_at IS NULL
 	    );
 	END;
-	CREATE TRIGGER prevent_update_to_multiple_active_work_sessions
+	CREATE TRIGGER IF NOT EXISTS prevent_update_to_multiple_active_work_sessions
 	BEFORE UPDATE ON work_session
 	WHEN NEW.ended_at IS NULL
 	BEGIN
