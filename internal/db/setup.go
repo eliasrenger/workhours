@@ -8,6 +8,8 @@ import (
 	"github.com/eliasrenger/workhours/internal/paths"
 )
 
+var DB *sql.DB
+
 func SetupDB() error {
 	db_path, err := paths.GetDBPath()
 	if err != nil {
@@ -84,4 +86,18 @@ func SetupDB() error {
 	}
 
 	return nil
+}
+
+func InitDB() error {
+	var err error
+	db_path, err := paths.GetDBPath()
+	if err != nil {
+		return err
+	}
+
+	DB, err = sql.Open("sqlite3", db_path)
+	if err != nil {
+		return err
+	}
+	return DB.Ping()
 }

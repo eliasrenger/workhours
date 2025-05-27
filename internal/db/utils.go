@@ -1,12 +1,8 @@
 package db
 
 import (
-	"database/sql"
-
 	_ "github.com/mattn/go-sqlite3" // SQLite driver
 )
-
-var DB *sql.DB
 
 func convertBoolToInt(b bool) int {
 	if b {
