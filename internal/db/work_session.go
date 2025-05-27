@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/eliasrenger/workhours/internal/models"
@@ -42,7 +43,7 @@ func GetWorkSessionByID(id string) (models.WorkSession, error) {
 		return w, err
 	}
 
-	row := DB.QueryRow(`SELECT * FROM workday_session WHERE id = ?`, id)
+	row := DB.QueryRow(`SELECT * FROM work_session WHERE id = ?`, id)
 
 	err = row.Scan(
 		&w.Id,
@@ -65,7 +66,7 @@ func GetActiveWorkSession() (models.WorkSession, error) {
 	if err != nil {
 		return w, err
 	}
-	row := DB.QueryRow(`SELECT * FROM workday_session WHERE ended_at = 0`)
+	row := DB.QueryRow(`SELECT * FROM work_session WHERE ended_at = 0`)
 	err = row.Scan(
 		&w.Id,
 		&w.Date,
@@ -155,11 +156,16 @@ func GetWorktimeByDate(date string) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
+		fmt.Printf("this is started at %v \n", w.StartedAt)
+		fmt.Printf("this is ended at %v \n", w.EndedAt)
 		if w.EndedAt == 0 {
 			w.EndedAt = time.Now().Unix()
+			fmt.Println("WAIT WHAT?")
 		}
+		fmt.Println(w)
 		secondsWorked += w.EndedAt - w.StartedAt
 	}
 
+	fmt.Printf("seconds %v \n", secondsWorked)
 	return secondsWorked, nil
 }
