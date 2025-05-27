@@ -47,7 +47,7 @@ func StopWork(currentTime time.Time) error {
 	if err != nil {
 		return err
 	}
-	if activeWorkSession.Id != uuid.Nil {
+	if activeWorkSession.Id == uuid.Nil {
 		return ErrNoWorkSessionActive
 	}
 
