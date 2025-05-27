@@ -15,7 +15,12 @@ var (
 )
 
 func InsertWorkSession(w models.WorkSession) error {
-	_, err := DB.Exec(
+	err := InitDB()
+	if err != nil {
+		return err
+	}
+
+	_, err = DB.Exec(
 		`INSERT INTO work_session (id, date, started_at, ended_at, number_of_quick_breaks, last_quick_break, notes)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`,
 		w.Id,
@@ -32,9 +37,14 @@ func InsertWorkSession(w models.WorkSession) error {
 
 func GetWorkSessionByID(id string) (models.WorkSession, error) {
 	var w models.WorkSession
+	err := InitDB()
+	if err != nil {
+		return w, err
+	}
+
 	row := DB.QueryRow(`SELECT * FROM workday_session WHERE id = ?`, id)
 
-	err := row.Scan(
+	err = row.Scan(
 		&w.Id,
 		&w.Date,
 		&w.StartedAt,
@@ -77,6 +87,7 @@ func HasActiveWorkSession() (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
 	row := DB.QueryRow(`SELECT COUNT(*) FROM work_session WHERE ended_at = 0`)
 	err = row.Scan(&count)
 	if err != nil {
@@ -86,7 +97,12 @@ func HasActiveWorkSession() (bool, error) {
 }
 
 func UpdateWorkSessionById(w models.WorkSession) error {
-	_, err := DB.Exec(
+	err := InitDB()
+	if err != nil {
+		return err
+	}
+
+	_, err = DB.Exec(
 		`UPDATE work_session 
 		SET started_at = ?, 
 		    ended_at = ?,
@@ -114,6 +130,12 @@ func GetWorktimeByDate(date string) (int64, error) {
 		return 0, ErrDateFormat
 	}
 	var secondsWorked int64
+
+	err := InitDB()
+	if err != nil {
+		return secondsWorked, err
+	}
+
 	rows, err := DB.Query(`SELECT id, date, started_at, ended_at, number_of_quick_breaks, last_quick_break, notes FROM work_session WHERE date = ?`, date)
 	if err != nil {
 		return 0, err
