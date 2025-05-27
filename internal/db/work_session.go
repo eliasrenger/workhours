@@ -156,7 +156,7 @@ func GetWorktimeByDate(date string) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
-		if w.EndedAt == 0 { //TODO: handle start and end times in different dates?
+		if w.EndedAt == 0 { //TODO: handle start and end times in different dates? Needs to be implemented at UPDATE to handle quick breaks as well
 			w.EndedAt = time.Now().Unix()
 		}
 		secondsWorked += w.EndedAt - w.StartedAt
