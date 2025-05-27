@@ -1,10 +1,12 @@
 package commands
 
 import (
+	"fmt"
 	"log"
 	"time"
 
 	"github.com/eliasrenger/workhours/internal/services"
+	"github.com/eliasrenger/workhours/utils"
 )
 
 func CmdStartWork(currentTime time.Time) {
@@ -48,8 +50,13 @@ func CmdHoursWork() {
 	if err != nil {
 		log.Fatalf("Error getting time worked today: %v", err)
 	} else {
-		wholeHours := secondsWorked % 3600
-		wholeMinutes := (secondsWorked - wholeHours*3600) % 60
-		log.Printf("You've worked %d hours and %d minutes today.\n", wholeHours, wholeMinutes)
+		hours, minutes, _ := utils.FormatSeconds(secondsWorked)
+		var message string
+		if hours == 0 {
+			message = fmt.Sprintf("You've worked %dmin today", minutes)
+		} else {
+			message = fmt.Sprintf("You've worked %dh %dmin today", hours, minutes)
+		}
+		fmt.Println(message)
 	}
 }
