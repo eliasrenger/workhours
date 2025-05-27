@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/eliasrenger/workhours/internal/models"
@@ -156,16 +155,11 @@ func GetWorktimeByDate(date string) (int64, error) {
 		if err != nil {
 			return 0, err
 		}
-		fmt.Printf("this is started at %v \n", w.StartedAt)
-		fmt.Printf("this is ended at %v \n", w.EndedAt)
-		if w.EndedAt == 0 {
+		if w.EndedAt == 0 { //TODO: handle start and end times in different dates?
 			w.EndedAt = time.Now().Unix()
-			fmt.Println("WAIT WHAT?")
 		}
-		fmt.Println(w)
 		secondsWorked += w.EndedAt - w.StartedAt
 	}
 
-	fmt.Printf("seconds %v \n", secondsWorked)
 	return secondsWorked, nil
 }
