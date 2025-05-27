@@ -13,8 +13,7 @@ func CmdStartWork(currentTime time.Time) {
 	err := services.StartWork(currentTime)
 	if err == services.ErrWorkSessionAlreadyActive {
 		log.Fatalf("Work session already active.")
-	}
-	if err != nil {
+	} else if err != nil {
 		fmt.Printf("Error starting work session: %v", err)
 	} else {
 		fmt.Println("Work session started.")
@@ -25,8 +24,7 @@ func CmdStopWork(currentTime time.Time) {
 	err := services.StopWork(currentTime)
 	if err == services.ErrNoWorkSessionActive {
 		fmt.Println("No active work session.")
-	}
-	if err != nil {
+	} else if err != nil {
 		fmt.Printf("Error stopping work session: %v", err)
 	} else {
 		fmt.Println("Work session stopped.")
@@ -37,8 +35,7 @@ func CmdQuickieWork(currentTime time.Time) {
 	err := services.AddQuickBreak(currentTime)
 	if err == services.ErrNoWorkSessionActive {
 		fmt.Println("No active work session.")
-	}
-	if err != nil {
+	} else if err != nil {
 		fmt.Printf("Error saving quick break: %v", err)
 	} else {
 		fmt.Println("Quick break saved.")
